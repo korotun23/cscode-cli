@@ -1,3 +1,4 @@
+from PIL import Image, ImageOps
 import csv
 from cscode_CLI.models.record import Record
 
@@ -15,3 +16,7 @@ def write_csv(path: str, records: list[Record], delimiter: str):
 
         for record in records:
             writer.writerow(record.__dict__)
+
+def write_barcode(path: str, image: Image):
+
+    ImageOps.expand(image, fill="white").save(path)

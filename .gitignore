@@ -2,7 +2,7 @@
 __pycache__/
 
 # Ignore virtual environment
-cscode_CLI_venv/
+cscode_cli_venv/
 
 # Ignore test results
 tests/test_results

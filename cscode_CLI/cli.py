@@ -20,7 +20,8 @@ def main():
     process_csv(
         input_path=args.input,
         output_path=args.output,
-        delimiter=args.delimiter
+        delimiter=args.delimiter,
+        barcode_type=args.format
     )
 
 if __name__ == "__main__":
