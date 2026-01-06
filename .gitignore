@@ -1,0 +1,8 @@
+# Ignore cache folders
+__pycache__/
+
+# Ignore virtual environment
+cscode_CLI_venv/
+
+# Ignore test results
+tests/test_results
