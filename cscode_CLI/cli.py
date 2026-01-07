@@ -3,6 +3,7 @@ from cscode_CLI.utils.exceptions import CscodeCliError
 from cscode_CLI.services.processor import process_csv
 from cscode_CLI.utils.validators import validate_parameters
 import sys
+import time
 
 # CLI Entry point :
 # - Parse arguments
@@ -22,6 +23,8 @@ def main():
     args = parser.parse_args()
 
     try:
+        start_time = time.time()
+
         # Validate parameters
         validate_parameters({
             "format": args.format,
@@ -38,6 +41,10 @@ def main():
             width=args.width,
             height=args.height
         )
+
+        end_time = time.time()
+        print(f"Processing time: {end_time - start_time:.2f} seconds")
+
     except CscodeCliError as e:
         print("Error: " + str(e))
         sys.exit(1)
