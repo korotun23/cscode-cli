@@ -1,3 +1,4 @@
+import multiprocessing
 from cscode_CLI.io.reader import read_csv
 from cscode_CLI.io.writer import write_barcode
 from cscode_CLI.services import barcode_generator
@@ -7,6 +8,19 @@ from cscode_CLI.utils.exceptions import InvalidDataError
 import os
 from multiprocessing import Pool
 import multiprocessing
+
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
+def process_record(record: dict, width: int, height: int, barcode_type: str, output_path: str):
+    try:
+        barcode = barcode_generator.generate_barcode(barcode_type, width, height, record["data"])
+        path = os.path.join(output_path, record["file_name"])
+        write_barcode(path, barcode)
+    except Exception as e:
+        raise Exception(f"Error processing record {record['file_name']}: {e}")
+    
+    return barcode
 
 def process_csv (input_path: str, output_path: str, delimiter: str, barcode_type: str, width: int, height: int):
     
@@ -19,17 +33,15 @@ def process_csv (input_path: str, output_path: str, delimiter: str, barcode_type
             records.append(validate_record(row))
         except InvalidDataError as e:
             raise InvalidDataError(f"Invalid data: {e} at row {i}")
-    
-        # Multithreading
-        with Pool(processes=multiprocessing.cpu_count()) as pool:
+
+    # Multithreading execution
+    with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
         for record in records:
-            pool.apply_async(
-                barcode_generator.generate_barcode,
-                args=(barcode_type, width, height, record["data"]),
-                callback=lambda barcode: write_barcode(os.path.join(output_path, record["file_name"]), barcode)
-            )
-        pool.close()
-        pool.join()
+            try:
+                executor.submit(process_record, record, width, height, barcode_type, output_path)
+            except Exception as e:
+                raise Exception(f"Error writing barcode {record['file_name']}: {e}")
+        
         
         # Monoprocessing alternative
         #for record in records:
