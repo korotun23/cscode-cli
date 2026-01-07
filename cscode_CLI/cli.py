@@ -15,6 +15,8 @@ def main():
     parser = argparse.ArgumentParser(description="CSCODE CLI - Barcode generating tool from csv data source")
     parser.add_argument("input", help="CSV file path")
     parser.add_argument("--format", "-f", help="Barcode format")
+    parser.add_argument("--width", "-sw", help="Barcode width in mm")
+    parser.add_argument("--height", "-sh", help="Barcode height in mm")
     parser.add_argument("--output", "-o", help="Output directory")
     parser.add_argument("--delimiter", "-d", help="CSV delimiter")
     args = parser.parse_args()
@@ -23,6 +25,8 @@ def main():
         # Validate parameters
         validate_parameters({
             "format": args.format,
+            "width": args.width,
+            "height": args.height,
             "delimiter": args.delimiter
         })
         # CSV processing
@@ -30,7 +34,9 @@ def main():
             input_path=args.input,
             output_path=args.output,
             delimiter=args.delimiter,
-            barcode_type=args.format
+            barcode_type=args.format,
+            width=args.width,
+            height=args.height
         )
     except CscodeCliError as e:
         print("Error: " + str(e))
