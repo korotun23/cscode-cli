@@ -19,7 +19,7 @@ def process_csv (input_path: str, output_path: str, delimiter: str, barcode_type
             raise InvalidDataError(f"Invalid data: {e} at row {i}")
 
     for record in records:
-        barcode = barcode_generator.generate_barcode(barcode_type, record["data"])
+        barcode = barcode_generator.generate_barcode(barcode_type, 80, 30, record["data"])
         path = os.path.join(output_path, record["file_name"])
         write_barcode(path, barcode)
 
