@@ -1,5 +1,8 @@
 import argparse
+from cscode_CLI.utils.exceptions import CscodeCliError
 from cscode_CLI.services.processor import process_csv
+from cscode_CLI.utils.validators import validate_parameters
+import sys
 
 # CLI Entry point :
 # - Parse arguments
@@ -16,13 +19,22 @@ def main():
     parser.add_argument("--delimiter", "-d", help="CSV delimiter")
     args = parser.parse_args()
 
-    # CSV processing
-    process_csv(
-        input_path=args.input,
-        output_path=args.output,
-        delimiter=args.delimiter,
-        barcode_type=args.format
-    )
+    try:
+        # Validate parameters
+        validate_parameters({
+            "format": args.format,
+            "delimiter": args.delimiter
+        })
+        # CSV processing
+        process_csv(
+            input_path=args.input,
+            output_path=args.output,
+            delimiter=args.delimiter,
+            barcode_type=args.format
+        )
+    except CscodeCliError as e:
+        print("Error: " + str(e))
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

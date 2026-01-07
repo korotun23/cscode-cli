@@ -18,5 +18,4 @@ def write_csv(path: str, records: list[Record], delimiter: str):
             writer.writerow(record.__dict__)
 
 def write_barcode(path: str, image: Image):
-
     ImageOps.expand(image, fill="white").save(path)

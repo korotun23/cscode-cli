@@ -1,0 +1,10 @@
+[project]
+name = "cscode-cli"
+version = "0.1.0"
+description = "Barcode generating tool from csv data source"
+authors = [
+    { name = "Jo Korotun", email = "jo.biliec23@gmail.com" }
+]
+
+[project.scripts]
+cscode = "cscode_CLI.cli:main"
